@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function addColor() {
     newColorHex = randomHexColor();
-    colors.push({ hex: newColorHex, name: "" });
+    colors.unshift({ hex: newColorHex, name: "" });
 
     updateColorLibrary();
     setTimeout(() => {
@@ -38,7 +38,7 @@ function addColor() {
 function saveName() {
     let name = colorNameInput.value.trim();
     if (name !== "") {
-        let lastColor = colors[colors.length - 1];
+        let lastColor = colors[0];
 
         if (lastColor.name) {
             lastColor.name += `, ${name}`;
