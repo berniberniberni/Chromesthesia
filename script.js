@@ -14,7 +14,7 @@ function setup() {
     saveColorName = select("#saveColorName");
 
     // Add event listeners
-    addButton.mousePressed(showNameForm);
+    addButton.mousePressed(addColor);
     saveColorName.mousePressed(saveName);
     colorNameInput.elt.addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
@@ -23,20 +23,26 @@ function setup() {
     });
 }
 
-function showNameForm() {
-    // Show the naming form
-    nameForm.removeClass("hidden");
-    colorNameInput.value(""); // Clear previous input
-    colorNameInput.elt.focus(); // Auto-focus on input
+function addColor() {
+    // Generate a color first so the user can see it
+    newColorHex = randomHexColor();
+    colors.push({ hex: newColorHex, name: "" });
+
+    // Show the naming form AFTER color appears
+    redraw();
+    setTimeout(() => {
+        nameForm.removeClass("hidden");
+        colorNameInput.value(""); // Clear previous input
+        colorNameInput.elt.focus(); // Auto-focus on input
+    }, 300); // Small delay to ensure user sees the color first
 }
 
 function saveName() {
     let name = colorNameInput.value().trim();
     if (name !== "") {
-        // Generate a random color only after name is entered
-        newColorHex = randomHexColor();
-        colors.push({ hex: newColorHex, name });
-
+        // Assign name to the last added color
+        colors[colors.length - 1].name = name;
+        
         // Hide form after naming
         nameForm.addClass("hidden");
         redraw();
@@ -62,7 +68,8 @@ function draw() {
         fill(255);
         textSize(16);
         textAlign(LEFT, CENTER);
-        text(`#${colors[i].hex} - ${colors[i].name}`, 20, i * stripeHeight + stripeHeight / 2);
+        let displayText = colors[i].name ? `#${colors[i].hex} - ${colors[i].name}` : `#${colors[i].hex} (Name it below)`;
+        text(displayText, 20, i * stripeHeight + stripeHeight / 2);
     }
 }
 
