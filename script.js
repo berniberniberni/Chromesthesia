@@ -4,7 +4,7 @@ let newColorHex = null;
 
 function setup() {
     let canvas = createCanvas(windowWidth * 0.8, windowHeight * 0.6);
-    canvas.parent("canvas-container"); // Attach canvas to the div
+    canvas.parent("canvas-container");
     noLoop();
 
     // Get elements from HTML
@@ -13,6 +13,9 @@ function setup() {
     nameForm = select("#nameForm");
     colorNameInput = select("#colorNameInput");
     saveColorName = select("#saveColorName");
+
+    // Load stored colors from local storage
+    loadColorsFromLocalStorage();
 
     // Add event listeners
     addButton.mousePressed(addColor);
@@ -40,18 +43,84 @@ function addColor() {
 function saveName() {
     let name = colorNameInput.value().trim();
     if (name !== "") {
-        colors[colors.length - 1].name = name;
+        let lastColor = colors[colors.length - 1];
+
+        if (lastColor.name) {
+            lastColor.name += `, ${name}`;
+        } else {
+            lastColor.name = name;
+        }
+
         nameForm.addClass("hidden");
+        saveColorsToLocalStorage();
+        updateColorLibrary();
         redraw();
     }
 }
 
-// ✅ Reset function to clear all colors
-function resetColors() {
-    colors = []; // Clear colors
-    redraw(); // Refresh canvas
+// ✅ Function to update the Color Library section
+function updateColorLibrary() {
+    let libraryDiv = select("#colorLibrary");
+    libraryDiv.html("");
+
+    if (colors.length === 0) {
+        libraryDiv.html("<p>No colors saved yet.</p>");
+        return;
+    }
+
+    for (let i = 0; i < colors.length; i++) {
+        let colorEntry = createDiv();
+        colorEntry.style("background-color", colors[i].hex);
+        colorEntry.style("color", "#fff");
+        colorEntry.style("padding", "10px");
+        colorEntry.style("margin", "5px");
+        colorEntry.style("cursor", "pointer");
+
+        let text = `${colors[i].hex} - ${colors[i].name}`;
+        colorEntry.html(text);
+
+        // Click to rename an existing color
+        colorEntry.mousePressed(() => renameColor(i));
+
+        libraryDiv.child(colorEntry);
+    }
 }
 
+// ✅ Function to rename an existing color in the library
+function renameColor(index) {
+    let newName = prompt(`Rename ${colors[index].hex}:`, colors[index].name);
+    if (newName) {
+        colors[index].name += `, ${newName}`;
+        saveColorsToLocalStorage();
+        updateColorLibrary();
+        redraw();
+    }
+}
+
+// ✅ Function to save colors to local storage
+function saveColorsToLocalStorage() {
+    localStorage.setItem("colorLibrary", JSON.stringify(colors));
+}
+
+// ✅ Function to load colors from local storage when site opens
+function loadColorsFromLocalStorage() {
+    let storedColors = localStorage.getItem("colorLibrary");
+    if (storedColors) {
+        colors = JSON.parse(storedColors);
+        redraw();
+        updateColorLibrary();
+    }
+}
+
+// ✅ Reset function clears local storage
+function resetColors() {
+    colors = [];
+    localStorage.removeItem("colorLibrary");
+    updateColorLibrary();
+    redraw();
+}
+
+// ✅ Draw the colors on the canvas
 function draw() {
     background(220);
 
@@ -66,16 +135,20 @@ function draw() {
     let stripeHeight = height / max(1, colors.length);
 
     for (let i = 0; i < colors.length; i++) {
-        fill(colors[i].hex);
+        fill(color(colors[i].hex));
         rect(0, i * stripeHeight, width, stripeHeight);
         fill(255);
         textSize(16);
         textAlign(LEFT, CENTER);
-        let displayText = colors[i].name ? `#${colors[i].hex} - ${colors[i].name}` : `#${colors[i].hex} (Name it below)`;
+        let displayText = `${colors[i].hex} - ${colors[i].name}`;
         text(displayText, 20, i * stripeHeight + stripeHeight / 2);
     }
 }
 
+// ✅ Function to generate a random HEX color
 function randomHexColor() {
-    return color(random(255), random(255), random(255));
+    let r = floor(random(256));
+    let g = floor(random(256));
+    let b = floor(random(256));
+    return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 }
