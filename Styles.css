@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#canvas-container {
+    margin-top: 20px;
+}
+
+/* Hidden Naming Form */
+.hidden {
+    display: none;
+}
+
+#nameForm {
+    margin-top: 15px;
+}
+
+#colorNameInput {
+    padding: 8px;
+    font-size: 14px;
+    width: 200px;
+}
