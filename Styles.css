@@ -1,7 +1,7 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     text-align: center;
-    background-color: #f4f4f4;
+    background-color: #ffffff;
     margin: 0;
     padding: 0;
 }
@@ -15,8 +15,8 @@ h1 {
 }
 
 button {
-    background-color: #007BFF;
-    color: white;
+    background-color: #ccdae8;
+    color: rgb(0, 0, 0);
     border: none;
     padding: 10px 20px;
     font-size: 16px;
@@ -26,15 +26,15 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #edeee5;
 }
 
 #resetButton {
-    background-color: #dc3545;
+    background-color: #b67b58;
 }
 
 #resetButton:hover {
-    background-color: #c82333;
+    background-color: #edeee5;
 }
 
 #nameForm {
@@ -51,19 +51,14 @@ button:hover {
     display: none;
 }
 
-#canvas-container {
-    margin-top: 20px;
-}
-
-
 #colorLibrary {
-    width: 80%;
+    width: 100%;
     margin: 20px auto;
 }
 
 .color-stripe {
     width: 100%;
-    height: 40px; /* Matches stripe height in canvas */
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: left;
@@ -71,10 +66,15 @@ button:hover {
     color: white;
     font-size: 16px;
     font-weight: bold;
-    cursor: pointer;
-    border: 1px solid #fff; /* Optional: Add border for separation */
+    cursor: grab;
+    border: 1px solid #fff;
+    user-select: none; /* Prevents text selection while dragging */
 }
 
 .color-stripe:hover {
     opacity: 0.8;
+}
+
+.dragging {
+    opacity: 0.5;
 }
