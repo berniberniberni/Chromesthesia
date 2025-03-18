@@ -1,5 +1,5 @@
 let colors = [];
-let addButton, nameForm, colorNameInput, saveColorName;
+let addButton, resetButton, nameForm, colorNameInput, saveColorName;
 let newColorHex = null;
 
 function setup() {
@@ -9,12 +9,14 @@ function setup() {
 
     // Get elements from HTML
     addButton = select("#addColor");
+    resetButton = select("#resetButton");
     nameForm = select("#nameForm");
     colorNameInput = select("#colorNameInput");
     saveColorName = select("#saveColorName");
 
     // Add event listeners
     addButton.mousePressed(addColor);
+    resetButton.mousePressed(resetColors);
     saveColorName.mousePressed(saveName);
     colorNameInput.elt.addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
@@ -24,29 +26,30 @@ function setup() {
 }
 
 function addColor() {
-    // Generate a color first so the user can see it
     newColorHex = randomHexColor();
     colors.push({ hex: newColorHex, name: "" });
 
-    // Show the naming form AFTER color appears
     redraw();
     setTimeout(() => {
         nameForm.removeClass("hidden");
-        colorNameInput.value(""); // Clear previous input
-        colorNameInput.elt.focus(); // Auto-focus on input
-    }, 300); // Small delay to ensure user sees the color first
+        colorNameInput.value("");
+        colorNameInput.elt.focus();
+    }, 300);
 }
 
 function saveName() {
     let name = colorNameInput.value().trim();
     if (name !== "") {
-        // Assign name to the last added color
         colors[colors.length - 1].name = name;
-        
-        // Hide form after naming
         nameForm.addClass("hidden");
         redraw();
     }
+}
+
+// ✅ Reset function to clear all colors
+function resetColors() {
+    colors = []; // Clear colors
+    redraw(); // Refresh canvas
 }
 
 function draw() {
