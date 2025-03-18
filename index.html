@@ -8,28 +8,40 @@
 </head>
 <body>
     <div class="container">
-        <h1>You feel look like I feel...</h1>
+        <h1>You look like I feel...</h1>
         <p class="description">
             ... is a color library that invites to reflect on the color vocabulary we use —both professionally and personally
             —by establishing intuitive connections between color, meaning, and experience. <br><br>
         </p>        
         <p>Click "Add Color" to generate a color that will appear at the bottom of the other colors. Then, name it!</p>
+        
         <button id="addColor">Add Color</button>
         <button id="resetButton">Reset</button>
-        <h2>Color Library</h2>
-        <div id="colorLibrary"></div>
-
 
         <!-- Naming Form -->
         <div id="nameForm" class="hidden">
             <input type="text" id="colorNameInput" placeholder="Enter a name for the color">
             <button id="saveColorName">Save Name</button>
         </div>
-
+        <h2>Canvas</h2>
         <div id="canvas-container"></div>
     </div>
+        <h2>Color Library</h2>
+        <div id="colorLibrary"></div>
+
+
+    
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
+
+
+
+<!--to do 
+- button- on click sent name is only named after button "add new" is clicked
+- canvas and color-library are both displayed and have different functionalities
+- turn view/no view for names would be great, so that only a striped background could be seen as well
+put inspiration/reference in readme or description
+-drag and drop function-->

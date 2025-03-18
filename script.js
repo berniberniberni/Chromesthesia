@@ -53,15 +53,15 @@ function saveName() {
 
         nameForm.addClass("hidden");
         saveColorsToLocalStorage();
-        updateColorLibrary();
-        redraw();
+        updateColorLibrary(); // Update only the list
     }
 }
 
-// ✅ Function to update the Color Library section
+
+//  Function to update the Color Library section
 function updateColorLibrary() {
     let libraryDiv = select("#colorLibrary");
-    libraryDiv.html("");
+    libraryDiv.html(""); // Clear existing content
 
     if (colors.length === 0) {
         libraryDiv.html("<p>No colors saved yet.</p>");
@@ -70,23 +70,19 @@ function updateColorLibrary() {
 
     for (let i = 0; i < colors.length; i++) {
         let colorEntry = createDiv();
+        colorEntry.class("color-stripe");
         colorEntry.style("background-color", colors[i].hex);
-        colorEntry.style("color", "#fff");
-        colorEntry.style("padding", "10px");
-        colorEntry.style("margin", "5px");
-        colorEntry.style("cursor", "pointer");
+        colorEntry.html(`<span>${colors[i].hex} - ${colors[i].name}</span>`);
 
-        let text = `${colors[i].hex} - ${colors[i].name}`;
-        colorEntry.html(text);
-
-        // Click to rename an existing color
+        // Allow clicking a color to rename it
         colorEntry.mousePressed(() => renameColor(i));
 
         libraryDiv.child(colorEntry);
     }
 }
 
-// ✅ Function to rename an existing color in the library
+
+//  Function to rename an existing color in the library
 function renameColor(index) {
     let newName = prompt(`Rename ${colors[index].hex}:`, colors[index].name);
     if (newName) {
@@ -97,32 +93,32 @@ function renameColor(index) {
     }
 }
 
-// ✅ Function to save colors to local storage
+//  Function to save colors to local storage
 function saveColorsToLocalStorage() {
     localStorage.setItem("colorLibrary", JSON.stringify(colors));
 }
 
-// ✅ Function to load colors from local storage when site opens
+//  Function to load colors from local storage when site opens
 function loadColorsFromLocalStorage() {
     let storedColors = localStorage.getItem("colorLibrary");
     if (storedColors) {
         colors = JSON.parse(storedColors);
-        redraw();
         updateColorLibrary();
     }
 }
 
-// ✅ Reset function clears local storage
+
+//  Reset function clears local storage
 function resetColors() {
     colors = [];
     localStorage.removeItem("colorLibrary");
-    updateColorLibrary();
-    redraw();
+    updateColorLibrary(); // Clear the displayed list
 }
 
-// ✅ Draw the colors on the canvas
+
+// Draw the colors on the canvas
 function draw() {
-    background(220);
+    //background(220);
 
     if (colors.length === 0) {
         fill(0);
@@ -145,7 +141,7 @@ function draw() {
     }
 }
 
-// ✅ Function to generate a random HEX color
+//  Function to generate a random HEX color
 function randomHexColor() {
     let r = floor(random(256));
     let g = floor(random(256));
