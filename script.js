@@ -1,7 +1,11 @@
+let colors = [];
+let addButton, resetButton, sortHexButton, nameForm, colorNameInput, saveColorName;
+let newColorHex = null;
+
 document.addEventListener("DOMContentLoaded", function () {
     addButton = document.getElementById("addColor");
     resetButton = document.getElementById("resetButton");
-    sortHexButton = document.getElementById("sortHexButton"); // Add the sort button
+    sortHexButton = document.getElementById("sortHexButton");
     nameForm = document.getElementById("nameForm");
     colorNameInput = document.getElementById("colorNameInput");
     saveColorName = document.getElementById("saveColorName");
@@ -10,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addButton.addEventListener("click", addColor);
     resetButton.addEventListener("click", resetColors);
-    sortHexButton.addEventListener("click", sortByHex); // Add event listener for sorting
+    sortHexButton.addEventListener("click", sortByHex);
     saveColorName.addEventListener("click", saveName);
     colorNameInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
@@ -18,13 +22,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    enableResizing(); // Enable slider functionality
     addDragAndDrop(); // Enable drag-and-drop functionality
 });
 
-
+// ✅ Function to add a new color
 function addColor() {
     newColorHex = randomHexColor();
-    colors.unshift({ hex: newColorHex, name: "" });
+    colors.unshift({ hex: newColorHex, name: "" }); // Add to the top
 
     updateColorLibrary();
     setTimeout(() => {
@@ -34,15 +39,16 @@ function addColor() {
     }, 300);
 }
 
+// ✅ Function to save the name of the first (newest) color
 function saveName() {
     let name = colorNameInput.value.trim();
     if (name !== "") {
-        let lastColor = colors[0];
+        let firstColor = colors[0]; // Select the first (newest) color
 
-        if (lastColor.name) {
-            lastColor.name += `, ${name}`;
+        if (firstColor.name) {
+            firstColor.name += `, ${name}`;
         } else {
-            lastColor.name = name;
+            firstColor.name = name;
         }
 
         nameForm.classList.add("hidden");
@@ -51,12 +57,16 @@ function saveName() {
     }
 }
 
+// ✅ Function to update the Color Library UI
 function updateColorLibrary() {
-    let libraryDiv = document.getElementById("colorLibrary");
-    libraryDiv.innerHTML = "";
+    let colorSection = document.getElementById("color-section");
+    let textSection = document.getElementById("text-section");
+
+    colorSection.innerHTML = "";
+    textSection.innerHTML = "";
 
     if (colors.length === 0) {
-        libraryDiv.innerHTML = "<p>No colors saved yet.</p>";
+        textSection.innerHTML = "<p>No colors saved yet.</p>";
         return;
     }
 
@@ -64,18 +74,26 @@ function updateColorLibrary() {
         let colorEntry = document.createElement("div");
         colorEntry.className = "color-stripe";
         colorEntry.style.backgroundColor = color.hex;
-        colorEntry.draggable = true; // Enable dragging
-        colorEntry.innerHTML = `<span>${color.hex} - ${color.name}</span>`;
+        colorEntry.draggable = true;
 
-        colorEntry.addEventListener("click", () => renameColor(index));
+        let textEntry = document.createElement("div");
+        textEntry.className = "text-stripe";
+        textEntry.innerText = `${color.hex} - ${color.name}`;
+
+        // Allow renaming on click
+        textEntry.addEventListener("click", () => renameColor(index));
+
+        // Drag-and-drop events
         colorEntry.addEventListener("dragstart", (e) => dragStart(e, index));
         colorEntry.addEventListener("dragover", dragOver);
         colorEntry.addEventListener("drop", (e) => drop(e, index));
 
-        libraryDiv.appendChild(colorEntry);
+        colorSection.appendChild(colorEntry);
+        textSection.appendChild(textEntry);
     });
 }
 
+// ✅ Function to rename a color
 function renameColor(index) {
     let newName = prompt(`Rename ${colors[index].hex}:`, colors[index].name);
     if (newName) {
@@ -85,10 +103,12 @@ function renameColor(index) {
     }
 }
 
+// ✅ Function to save colors to local storage
 function saveColorsToLocalStorage() {
     localStorage.setItem("colorLibrary", JSON.stringify(colors));
 }
 
+// ✅ Function to load colors from local storage
 function loadColorsFromLocalStorage() {
     let storedColors = localStorage.getItem("colorLibrary");
     if (storedColors) {
@@ -97,9 +117,17 @@ function loadColorsFromLocalStorage() {
     }
 }
 
+// ✅ Function to reset the color library
 function resetColors() {
     colors = [];
     localStorage.removeItem("colorLibrary");
+    updateColorLibrary();
+}
+
+// ✅ Function to sort colors by HEX value
+function sortByHex() {
+    colors.sort((a, b) => a.hex.localeCompare(b.hex)); // Sort by HEX value
+    saveColorsToLocalStorage();
     updateColorLibrary();
 }
 
@@ -119,7 +147,7 @@ function dragOver(event) {
 
 function drop(event, dropIndex) {
     event.preventDefault();
-    
+
     if (draggedIndex !== null && draggedIndex !== dropIndex) {
         let draggedColor = colors.splice(draggedIndex, 1)[0];
         colors.splice(dropIndex, 0, draggedColor);
@@ -130,16 +158,41 @@ function drop(event, dropIndex) {
     draggedIndex = null;
 }
 
-// 🎨 Function to Generate a Random HEX Color
+// ✅ Function to enable the resizable slider
+function enableResizing() {
+    const slider = document.getElementById("slider");
+    const colorSection = document.getElementById("color-section");
+    const textSection = document.getElementById("text-section");
+
+    let isResizing = false;
+
+    slider.addEventListener("mousedown", (e) => {
+        isResizing = true;
+        document.body.style.cursor = "ew-resize"; // Change cursor on drag
+
+        document.addEventListener("mousemove", resizeSections);
+        document.addEventListener("mouseup", () => {
+            isResizing = false;
+            document.body.style.cursor = "default"; // Reset cursor
+            document.removeEventListener("mousemove", resizeSections);
+        });
+    });
+
+    function resizeSections(e) {
+        if (!isResizing) return;
+
+        let containerWidth = document.getElementById("resizable-container").offsetWidth;
+        let newColorWidth = Math.max(10, Math.min(90, (e.clientX / containerWidth) * 100)); // Keep within 10-90%
+
+        colorSection.style.width = `${newColorWidth}%`;
+        textSection.style.width = `${100 - newColorWidth}%`;
+    }
+}
+
+// ✅ Function to generate a random HEX color
 function randomHexColor() {
     let r = Math.floor(Math.random() * 256);
     let g = Math.floor(Math.random() * 256);
     let b = Math.floor(Math.random() * 256);
     return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
-}
-
-function sortByHex() {
-    colors.sort((a, b) => a.hex.localeCompare(b.hex)); // Sort by HEX value
-    saveColorsToLocalStorage(); // Save sorted order
-    updateColorLibrary(); // Update display
 }

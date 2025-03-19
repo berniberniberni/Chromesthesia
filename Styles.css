@@ -1,84 +1,58 @@
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    text-align: center;
-    background-color: #ffffff;
-    margin: 0;
-    padding: 0;
+h1, p {
+    font-family: "Poppins", sans-serif;
 }
 
-.container {
-    margin-top: 20px;
+#resizable-container {
+    display: flex;
+    width: 80%;
+    height: 500px;
     margin: 20px auto;
-    font-size: 16px;
-    line-height: 1.6;
-    color: #333;
-    text-align: center;
+    border: 1px solid #ccc;
+    overflow: hidden;
 }
 
-h1 {
-    color: #333;
+#color-section {
+    width: 100%; /* Default width */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-button {
-    background-color: #ffffff;
-    color: rgb(0, 0, 0);
-    border: 1px solid;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 10px;
+#text-section {
+    width: 100%; /* Default width */
+    overflow-y: auto;
+    padding-left: 10px;
+    background-color: white;
 }
 
-button:hover {
-    background-color: #edeee5;
-}
-
-#resetButton {
-    background-color: #ffffff;
-}
-
-#resetButton:hover {
-    background-color: #edeee5;
-}
-
-#nameForm {
-    margin-top: 15px;
-}
-
-#colorNameInput {
-    padding: 8px;
-    font-size: 14px;
-    width: 200px;
-}
-
-.hidden {
-    display: none;
-}
-
-#colorLibrary {
-    width: 100%;
-    margin: 20px auto;
+#slider {
+    width: 5px;
+    background-color: #888;
+    cursor: ew-resize;
 }
 
 .color-stripe {
     width: 100%;
-    height: 20px;
+    height: 10px;
     display: flex;
     align-items: center;
-    justify-content: left;
-    padding-left: 20px;
-    color: rgb(0, 0, 0);
-    font-size: 12px;
-    font-weight: regular;
-    cursor: grab;
-    user-select: none; /* Prevents text selection while dragging */
+    padding-left: 10px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    user-select: none;
 }
 
-.color-stripe:hover {
-    opacity: 0.8;
-}
-
-.dragging {
-    opacity: 0.5;
+.text-stripe {
+    height: 25px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 1px solid #1c1c1c;
 }
