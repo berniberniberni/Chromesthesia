@@ -1,10 +1,7 @@
-let colors = [];
-let addButton, resetButton, nameForm, colorNameInput, saveColorName;
-let newColorHex = null;
-
 document.addEventListener("DOMContentLoaded", function () {
     addButton = document.getElementById("addColor");
     resetButton = document.getElementById("resetButton");
+    sortHexButton = document.getElementById("sortHexButton"); // Add the sort button
     nameForm = document.getElementById("nameForm");
     colorNameInput = document.getElementById("colorNameInput");
     saveColorName = document.getElementById("saveColorName");
@@ -13,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addButton.addEventListener("click", addColor);
     resetButton.addEventListener("click", resetColors);
+    sortHexButton.addEventListener("click", sortByHex); // Add event listener for sorting
     saveColorName.addEventListener("click", saveName);
     colorNameInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
@@ -22,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     addDragAndDrop(); // Enable drag-and-drop functionality
 });
+
 
 function addColor() {
     newColorHex = randomHexColor();
@@ -137,4 +136,10 @@ function randomHexColor() {
     let g = Math.floor(Math.random() * 256);
     let b = Math.floor(Math.random() * 256);
     return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+}
+
+function sortByHex() {
+    colors.sort((a, b) => a.hex.localeCompare(b.hex)); // Sort by HEX value
+    saveColorsToLocalStorage(); // Save sorted order
+    updateColorLibrary(); // Update display
 }
