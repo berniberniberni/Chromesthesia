@@ -12,9 +12,9 @@ Web-based interface (or specify platform: mobile app, desktop, etc.)
 
 - Technologies Used
 
-[Insert framework or language, e.g., JavaScript, Web Audio API, Three.js, etc.]
-
-[Add any libraries, e.g., Tone.js, p5.js, D3.js]
+frameworks:
+languages:
+libraries:
 
 - Installation
 
